@@ -300,7 +300,7 @@ class ExprTree():
             idx = self._set_children(nodes, idx + 1)
         return idx
 
-  # def _get_root_from    
+   
     
     
 class ExprTreeValidator():
@@ -347,7 +347,7 @@ class ExprTreeValidator():
 
                 while stack and stack[-1] == 0:
                     stack.pop()
-                    if stack:
+                if stack:
                         stack[-1] -= 1
             
         # stack should be empty

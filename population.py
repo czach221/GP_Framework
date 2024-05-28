@@ -3,51 +3,68 @@ import expr_tree
 
 
 class Population():
-
-
+    
     def populationCreator(population_size, individuum_size, operators):
         population = []
         
 
 
 class Organism():
+    
     def __init__(self, preorder_list):
         
         self.preorder_list = preorder_list
-        self.fitness = None
-        self.ExprTree = expr_tree.ExprTree
-        
-    def calculate_fitness(self, data, target):
+        self.fitness_org = None
+        self.root = None
+
+    def _get_fitness(self, data):
         """
-        Berechnet die Fitness des Organismus basierend auf den gegebenen Daten und Zielwerten.
+        Calculate the fitness of the organism based on the given data and target values.
         
         Params:
-            data... numpy array mit den Eingabedaten
-            target... numpy array mit den Zielwerten
+            data... numpy array with input data
+            func... numpy array with target values
         """
-        tree = self.ExprTree(self.preorder_list)
-        self.fitness = fitness.calculate(tree, data, target)
-        return self.fitness
+        self.fitness_org = fitness.Fitness.calculate_r2(data, self._get_symbolic_expression)
+        return self.fitness_org
 
-    def get_symbolic_expression(self):
+    def _get_symbolic_expression(self):
         """
-        Gibt den symbolischen Ausdruck des Baums zurück.
+        Returns the symbolic expression of the tree as sympy func
         """
-        tree = self.ExprTree(self.preorder_list)
+        tree = expr_tree.ExprTree(self.preorder_list)
         return tree.evaluate_symb()
 
-    def compare(self, other):
-        """
-        Vergleicht die Fitness dieses Organismus mit einem anderen.
+    def _get_organism_root(self):
+        '''
+        Returns the root of the expressionTree of this organism 
+        '''
+        root = expr_tree.ExprTree(self.preorder_list)
+
+    def _mutate(self):
+        '''
+        we create a mutation of the Organism.
+        '''
+
+    def _crossover(self, partner_preorder : list):
+         """
+        Performs a crossover with another organism and returns two offspring.
         
         Params:
-            other... der andere Organismus zum Vergleich
+            partner_preorder... list from other organism 
         Returns:
-            -1, 0, oder 1 wenn dieser Organismus eine niedrigere, gleiche oder höhere Fitness hat.
+            Two new organisms as offspring
         """
-        if self.fitness < other.fitness:
-            return -1
-        elif self.fitness > other.fitness:
-            return 1
-        else:
-            return 0
+    def _get_org_preorder(self):
+        '''
+        returns the preorder list from this organism, to be used in crossovers for example
+        '''
+        return self.preorder_list
+    
+    def _get_pretty_preorder(self) -> str:
+        """
+        Returns the preorder list in a readable string format.
+        """
+        return " ".join(map(str, self.preorder_list))
+
+
