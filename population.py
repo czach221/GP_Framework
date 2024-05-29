@@ -17,7 +17,7 @@ class Organism():
         self.fitness_org = None
         self.root = None
 
-    def _get_fitness(self, data):
+    def _get_fitness(self, data_x, data_y):
         """
         Calculate the fitness of the organism based on the given data and target values.
         
@@ -25,7 +25,7 @@ class Organism():
             data... numpy array with input data
             func... numpy array with target values
         """
-        self.fitness_org = fitness.Fitness.calculate_r2(data, self._get_symbolic_expression)
+        self.fitness_org = fitness.Fitness.calculate_r2(data_x, data_y, self._get_symbolic_expression)
         return self.fitness_org
 
     def _get_symbolic_expression(self):

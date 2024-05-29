@@ -2,7 +2,7 @@ import sympy as sp
 
 class Fitness():
     @staticmethod
-    def evaluate_function(func_str, x_value):
+    def evaluate_function(func, x_values):
         """
         Evaluates the given function string at the specified x value.
 
@@ -13,13 +13,14 @@ class Fitness():
         Returns:
             float: The evaluated y value.
         """
-        x = sp.symbols('x')
-        func = sp.sympify(func_str)
-        y_value = func.subs(x, x_value)
+        for x_value in x_values:
+            substitutions = {f'x_{i}': x_value[i] for i in range(len(x_value))}
+        y_value = func.subs(substitutions)
+
         return y_value 
 
     @staticmethod
-    def calculate_r2(data_points, func):
+    def calculate_r2(x_data, y_data, func):
         """
         Calculates the R² (coefficient of determination) for the given data points and function.
 
@@ -35,14 +36,14 @@ class Fitness():
             func = sp.sympify(func)
 
         # Calculate the mean of the y values
-        y_mean = sum(y for _, y in data_points) / len(data_points)
+        y_mean = sum(y_data) / len(y_data)
 
         # Initialize the sum of squares of residuals (SSR) and total sum of squares (SST)
         sum_func = 0  # Sum of squares of residuals
         sum_mean = 0  # Total sum of squares
 
-        for x, y in data_points:
-            y_pred = Fitness.evaluate_function(func, x)  # Predicted y value by the function
+        for x_values, y in zip(x_data, y_data):
+            y_pred = Fitness.evaluate_function(func, x_values)  # Predicted y value by the function
             sum_func += (y - y_pred) ** 2  # Sum of squares of residuals
             sum_mean += (y - y_mean) ** 2  # Total sum of squares
 
@@ -53,7 +54,7 @@ class Fitness():
 
 class Data():
     @staticmethod
-    def generate_data_points(func, start, end, step) -> list:
+    def generate_data_points(func, start, end, step) -> list: ##### -> muss noch angepasst werden, bei unterschiedlichen x_ auch unterschiedliche variablen einzuberechnen
         """
         Generates data points by evaluating the given function over a range of x values.
 
@@ -66,15 +67,17 @@ class Data():
         Returns:
             list of tuple: A list of (x, y) data points.
         """
-        data_points = []
+        data_points_y = []
+        data_points_x = []
         x = start
 
         while x <= end:
             y = func(x)
-            data_points.append((x, y))
+            data_points_y.append(y)
+            data_points_x.append([x])
             x += step
 
-        return data_points
+        return data_points_y, data_points_x
     
     @staticmethod
     def generate_data_points_sympy(func, start, end, step) -> list:
@@ -90,14 +93,16 @@ class Data():
         Returns:
             list of tuple: A list of (x, y) data points.
         """
-        data_points = []
+        data_points_y = []
+        data_points_x = []
         x = sp.symbols('x')
 
         current = start
 
         while current <= end:
             y = func.subs(x, current)
-            data_points.append((current, float(y)))  # Convert sympy Float to Python float
+            data_points_y.append((current, float(y)))  # Convert sympy Float to Python float
+            data_points_x.append()
             current += step
 
         return data_points
