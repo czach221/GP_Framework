@@ -1,4 +1,4 @@
-import sympy as sp
+from sympy import * 
 
 class Fitness():
     @staticmethod
@@ -13,8 +13,8 @@ class Fitness():
         Returns:
             float: The evaluated y value.
         """
-        for x_value in x_values:
-            substitutions = {f'x_{i}': x_value[i] for i in range(len(x_value))}
+        # creates hashmap for every i value in x_{i}
+        substitutions = {Symbol(f'x_{i}'): x_values[i] for i in range(len(x_values))}
         y_value = func.subs(substitutions)
 
         return y_value 
@@ -33,9 +33,10 @@ class Fitness():
         """
         #func should be a sympy function
         if isinstance(func, str):
-            func = sp.sympify(func)
+            func = sympify(func)
 
         # Calculate the mean of the y values
+        
         y_mean = sum(y_data) / len(y_data)
 
         # Initialize the sum of squares of residuals (SSR) and total sum of squares (SST)
@@ -49,6 +50,7 @@ class Fitness():
 
         # Calculate the R² error
         r2 = 1 - (sum_func / sum_mean)
+        
         return r2
 
 
@@ -67,6 +69,8 @@ class Data():
         Returns:
             list of tuple: A list of (x, y) data points.
         """
+
+        
         data_points_y = []
         data_points_x = []
         x = start
@@ -74,10 +78,10 @@ class Data():
         while x <= end:
             y = func(x)
             data_points_y.append(y)
-            data_points_x.append([x])
+            data_points_x.append([x, x/2])
             x += step
 
-        return data_points_y, data_points_x
+        return data_points_x, data_points_y
     
     @staticmethod
     def generate_data_points_sympy(func, start, end, step) -> list:
@@ -95,7 +99,7 @@ class Data():
         """
         data_points_y = []
         data_points_x = []
-        x = sp.symbols('x')
+        x = symbols('x')
 
         current = start
 
@@ -105,4 +109,4 @@ class Data():
             data_points_x.append()
             current += step
 
-        return data_points
+        return data_points_x, data_points_y

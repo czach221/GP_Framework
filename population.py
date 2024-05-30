@@ -1,19 +1,48 @@
 import fitness
 import expr_tree
+import random
+
 
 
 class Population():
     
-    def populationCreator(population_size, individuum_size, operators):
+    def generate_random_preorder(population_size, length, num_variables):
+        '''
+        generate an x amount of organisms, with a random function in preorder.
+
+        Params:
+            population_size... size of population
+            lenght... amount of characters in function
+            num_variables... 
+        '''
         population = []
         
+        constant = random.randrange(10)
+        operations = ['exp', 'sin', 'cos', 'tan', 'log', 'inv', 'neg', '*', '+']
+        variables = [f'x_{i}' for i in range(num_variables-1)]
+        
+        elements = [variables, constant, operations]
+        for i in range(population_size):
+            preorder = []
+            for _ in range(length):
+                character = random.choice(elements)
+                if character == 'operations':
+                    preorder.append(random.choice(operations))
+                elif(character == 'variables'):
+                    preorder.append(random.choice(variables))
+                else:
+                    preorder.append(character)
+            organism = Organism(preorder)
+            population.append(organism)
+        return population
+
 
 
 class Organism():
     
     def __init__(self, preorder_list):
         
-        self.preorder_list = preorder_list
+        self.preorder_list = preorder_listgenerate_random
         self.fitness_org = None
         self.root = None
 
@@ -24,6 +53,8 @@ class Organism():
         Params:
             data... numpy array with input data
             func... numpy array with target values
+        
+        Returns fitness of organism
         """
         self.fitness_org = fitness.Fitness.calculate_r2(data_x, data_y, self._get_symbolic_expression)
         return self.fitness_org
