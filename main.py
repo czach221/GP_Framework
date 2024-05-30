@@ -33,7 +33,7 @@ class GP_main():
     org_1 = population.Organism(preorder_list)
     tmp_2 = org_1._get_org_preorder()
     root = org_1._get_organism_root()
-    #ex = expr_tree.ExprTree()._preorder_tree(root)
+    
     #print(ex)
     #print(tmp_2)
     
@@ -49,5 +49,5 @@ class GP_main():
 
     population = population.Population.generate_random_preorder(10, 5, 1)
     for organism in population: 
-        print('\n'+ organism._get_org_preorder())
+        print(str(organism._get_org_preorder())+"\n")
 

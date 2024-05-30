@@ -17,21 +17,21 @@ class Population():
         '''
         population = []
         
-        constant = random.randrange(10)
-        operations = ['exp', 'sin', 'cos', 'tan', 'log', 'inv', 'neg', '*', '+']
-        variables = [f'x_{i}' for i in range(num_variables-1)]
         
-        elements = [variables, constant, operations]
+        operations = ['exp', 'sin', 'cos', 'tan', 'log', 'inv', 'neg', '*', '+']
+        variables = [f'x_{i}' for i in range(num_variables)]
+        
+        
         for i in range(population_size):
             preorder = []
             for _ in range(length):
-                character = random.choice(elements)
-                if character == 'operations':
+                character = random.randrange(3)
+                if character == 1:
                     preorder.append(random.choice(operations))
-                elif(character == 'variables'):
+                elif(character == 2):
                     preorder.append(random.choice(variables))
                 else:
-                    preorder.append(character)
+                    preorder.append(random.randrange(10))
             organism = Organism(preorder)
             population.append(organism)
         return population
@@ -42,12 +42,12 @@ class Organism():
     
     def __init__(self, preorder_list):
         
-        self.preorder_list = preorder_listgenerate_random
+        self.preorder_list = preorder_list
         self.fitness_org = None
         self.root = None
 
     def _get_fitness(self, data_x, data_y):
-        """
+        """s
         Calculate the fitness of the organism based on the given data and target values.
         
         Params:
