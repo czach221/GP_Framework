@@ -32,7 +32,7 @@ class Fitness():
             float: The R² value indicating the goodness of fit.
         """
         #func should be a sympy function
-        if isinstance(func, str):
+        if isinstance(func, (str, list)): 
             func = sympify(func)
 
         # Calculate the mean of the y values

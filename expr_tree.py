@@ -71,7 +71,7 @@ class Node():
             op... string indicator for operation on node (see NODE_OPS)
         '''
 
-        self.is_number = isinstance(op, (int, float, complex)) and not isinstance(op, bool)
+        self.is_number = isinstance(op, (int, float, complex)) and not isinstance(op, bool) or op == 'C'
         self.is_var = str(op).startswith('x_') or str(op) == 'var'
         self.is_calc = op in NODE_OPS
 
@@ -303,11 +303,9 @@ class ExprTree():
    
     
     
-class ExprTreeValidator():
-    #def __init__(self):
-
-    @staticmethod    
-    def is_valid_preorder(self, node_list : list):
+class Validator():       
+    @staticmethod
+    def is_valid_preorder(preorder : list) -> bool:
         """
         Check if the given preorder list represents a valid expression tree.
         
@@ -320,15 +318,15 @@ class ExprTreeValidator():
         stack = []
 
         # root has to be a operation if theres more than one op
-        if node_list[0] not in NODE_OPS and len(node_list) > 1:
+        if preorder[0] not in NODE_OPS and len(preorder) > 1:
             return False
 
         # initialize the stack
-        if node_list[0] in NODE_OPS:
-            arity = NODE_ARITIES[node_list[0]]
+        if preorder[0] in NODE_OPS:
+            arity = NODE_ARITIES[preorder[0]]
             stack.append(arity)
 
-        for op in node_list[1:]:
+        for op in preorder[1:]:
             # stack shoulndt be empty if there is still a op left
             if not stack:
                 return False
@@ -336,18 +334,14 @@ class ExprTreeValidator():
             # op is an operation -> adding the amount of availiable children knots from the operation
             if op in NODE_OPS:
                 arity = NODE_ARITIES[op]
-                stack[-1] -= 1
-                if stack[-1] == 0:
-                    stack.pop()
                 stack.append(arity)
             
             else:
                 # op is a nubmer or variable -> substracting 1 from the availiable children 
                 stack[-1] -= 1
-
                 while stack and stack[-1] == 0:
                     stack.pop()
-                if stack:
+                    if stack:
                         stack[-1] -= 1
             
         # stack should be empty
@@ -371,7 +365,7 @@ class ExprTreeValidator():
             
             # Recursively check each child
             for child in node.children:
-                if not ExprTreeValidator.is_valid_tree(child):
+                if not Validator.is_valid_tree(child):
                     return False
         
         elif node.is_var or node.is_number:

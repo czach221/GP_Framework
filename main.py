@@ -7,7 +7,7 @@ import sympy as sp
 
 class GP_main(): 
     # Example usage
-    preorder_list = ['+','*','exp','x_0','x_1','*',3,'x_1']
+    preorder_list = ['+','*','*','x_0','x_0','*','x_0', 'x_0', 3, 'x_1']
     #ExprTreeValidator.is_valid_preorder(preorder_list)
     #root_ = expr_tree.ExprTree(preorder_list).root
     #print(expr_tree.ExprTree(preorder_list)._get_root_from_preorder())
@@ -34,20 +34,25 @@ class GP_main():
     tmp_2 = org_1._get_org_preorder()
     root = org_1._get_organism_root()
     
-    #print(ex)
-    #print(tmp_2)
+    
+    is_preorder = expr_tree.Validator.is_valid_preorder(preorder_list)
+    
+    
+    print(is_preorder)
+    #rint(tmp_2)
     
     
     #tmp_1 = org_1._get_fitness(data_x, data_y)
     #print(tmp_1)
     
-    fit = fitness.Fitness.calculate_r2(data_x, data_y, tmp)
-    #print(fit)
+    fit = fitness.Fitness.calculate_r2(data_x, data_y, generated_function)
+    print(fit)
 
     #org_1._get_fitness(data_points)
 
-
-    population = population.Population.generate_random_preorder(10, 5, 1)
+'''
+    population = population.Population.generate_random_preorder(1000, 5, 2, [['operations', 2], ['variables', 2], ['constants', 2]], True)
     for organism in population: 
-        print(str(organism._get_org_preorder())+"\n")
-
+        print(str(organism._get_org_preorder()), organism._get_fitness(data_x, data_y)+"\n")
+    print(len(population))
+'''
