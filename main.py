@@ -7,7 +7,7 @@ import sympy as sp
 
 class GP_main(): 
     # Example usage
-    preorder_list = ['+','*','*','x_0','x_0','*','x_0', 'x_0', 3, 'x_1']
+    preorder_list = ['+','*','x_0','x_0','*', 3, 'x_0']
     #ExprTreeValidator.is_valid_preorder(preorder_list)
     #root_ = expr_tree.ExprTree(preorder_list).root
     #print(expr_tree.ExprTree(preorder_list)._get_root_from_preorder())
@@ -17,12 +17,14 @@ class GP_main():
 
     expr_tree_ = expr_tree.ExprTree(preorder_list)
     tmp = expr_tree_.evaluate_symb()
-    print(tmp)
+    
+    
     
 
-    x = sp.symbols('x')
-    symbolic_function = x**2 + 3*x + 2
-    generated_function = sp.lambdify(x, symbolic_function, 'numpy')
+    x_0 = sp.symbols('x_0')
+    symbolic_function = x_0**3 + 3*x_0 + 2*x_0
+     
+    generated_function = sp.lambdify(x_0, symbolic_function, 'numpy')
 
     #print(tmp, symbolic_function, generated_function)
 
@@ -31,28 +33,36 @@ class GP_main():
     #print(data_x, data_y)
     
     org_1 = population.Organism(preorder_list)
-    tmp_2 = org_1._get_org_preorder()
-    root = org_1._get_organism_root()
+    tmp_2 = org_1.get_preorder()
+    root = org_1.get_organism_root()
+    symp = org_1.get_symbolic_expression()
+
     
     
-    is_preorder = expr_tree.Validator.is_valid_preorder(preorder_list)
+    #is_preorder = expr_tree.Validator.is_valid_preorder(preorder_list)
     
     
-    print(is_preorder)
-    #rint(tmp_2)
+    
+    
     
     
     #tmp_1 = org_1._get_fitness(data_x, data_y)
     #print(tmp_1)
     
-    fit = fitness.Fitness.calculate_r2(data_x, data_y, generated_function)
-    print(fit)
+    #fit = fitness.Fitness.calculate_r2(data_x, data_y, symbolic_function)
+    #print(fit)
 
-    #org_1._get_fitness(data_points)
+   
 
-'''
-    population = population.Population.generate_random_preorder(1000, 5, 2, [['operations', 2], ['variables', 2], ['constants', 2]], True)
-    for organism in population: 
-        print(str(organism._get_org_preorder()), organism._get_fitness(data_x, data_y)+"\n")
-    print(len(population))
-'''
+
+    population = population.Population.generate_random_preorder(10000, 5, 1, [['operations', 2], ['variables', 3], ['constants', 1]], True)
+    for i, organism in enumerate(population): 
+        root_org = expr_tree.ExprTree(organism.get_preorder())
+        func_org = root_org.evaluate_symb()
+        print('fitness: '+str(organism.get_fitness(data_x, data_y)), '\n', func_org)
+        #print(str(root_org.evaluate_symb()), str(i) +"\n")
+
+        #print(str(organism._get_preorder()), str(i) +"\n")
+        
+    print("population lenght: "+str(len(population)))
+

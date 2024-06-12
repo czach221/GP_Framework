@@ -14,6 +14,7 @@ NODE_ARITIES = {
     '*' : 2,
     'sin' : 1,
     'cos' : 1,
+    'tan' : 1,
     'exp' : 1,
     'log' : 1,
     'inv' : 1,
@@ -26,6 +27,7 @@ NODE_OPS = {
     '*' : lambda x, y: x * y,
     'sin' : np.sin,
     'cos' : np.cos,
+    'tan' : np.tan,
     'exp' : np.exp,
     'log' : np.log,
     'inv' : lambda x: 1/x,
@@ -38,6 +40,7 @@ NODE_OPS_SYMB = {
     '*' : lambda x, y: x * y,
     'sin' : sympy.sin,
     'cos' : sympy.cos,
+    'tan' : sympy.tan,
     'exp' : sympy.exp,
     'log' : sympy.log,
     'inv' : lambda x : 1/x,
@@ -50,6 +53,7 @@ SYMPY2OP = {
     sympy.core.mul.Mul : '*',
     sympy.sin : 'sin',
     sympy.cos : 'cos',
+    sympy.tan : 'tan',
     sympy.exp : 'exp',
     sympy.log : 'log',
     'inv' : 'inv',
@@ -326,10 +330,10 @@ class Validator():
             arity = NODE_ARITIES[preorder[0]]
             stack.append(arity)
 
-        for op in preorder[1:]:
+        for i, op in enumerate(preorder[1:]):
             # stack shoulndt be empty if there is still a op left
             if not stack:
-                return False
+                return True
 
             # op is an operation -> adding the amount of availiable children knots from the operation
             if op in NODE_OPS:

@@ -14,9 +14,12 @@ class Fitness():
             float: The evaluated y value.
         """
         # creates hashmap for every i value in x_{i}
-        substitutions = {Symbol(f'x_{i}'): x_values[i] for i in range(len(x_values))}
-        y_value = func.subs(substitutions)
-
+        try:
+            substitutions = {Symbol(f'x_{i}'): x_values[i] for i in range(len(x_values))}
+            y_value = func.subs(substitutions).evalf()
+        except Exception as e:
+            print(f"Error evaluating function: {e}")
+            return None
         return y_value 
 
     @staticmethod
@@ -32,8 +35,8 @@ class Fitness():
             float: The R² value indicating the goodness of fit.
         """
         #func should be a sympy function
-        if isinstance(func, (str, list)): 
-            func = sympify(func)
+        #if isinstance(func, (str, list)): 
+        func = sympify(func)
 
         # Calculate the mean of the y values
         
@@ -67,7 +70,8 @@ class Data():
             step (float): The step size for x values.
 
         Returns:
-            list of tuple: A list of (x, y) data points.
+            list of y values: A list of y data points.
+            list of x values: A 2 dimensional list of x values, allows multiple x values 
         """
 
         
