@@ -1,60 +1,53 @@
-from sympy import * 
+from sympy import *
+import numpy as np
+import numbers
+import warnings
 
 class Fitness():
-    @staticmethod
-    def evaluate_function(func, x_values):
-        """
-        Evaluates the given function string at the specified x value.
-
-        Args:
-            func_str (str): The function as a string.
-            x_value (float): The x value at which to evaluate the function.
-
-        Returns:
-            float: The evaluated y value.
-        """
-        # creates hashmap for every i value in x_{i}
-        try:
-            substitutions = {Symbol(f'x_{i}'): x_values[i] for i in range(len(x_values))}
-            y_value = func.subs(substitutions).evalf()
-        except Exception as e:
-            print(f"Error evaluating function: {e}")
-            return None
-        return y_value 
-
     @staticmethod
     def calculate_r2(x_data, y_data, func):
         """
         Calculates the R² (coefficient of determination) for the given data points and function.
 
         Args:
-            data_points (list of tuple): A list of (x, y) data points.
-            func (str): The function as a string.
+            x_data (list of lists): A list of lists of x values.
+            y_data (list): A list of y values.
+            func (sympy.Expr): The function as a sympy expression.
 
         Returns:
-            float: The R² value indicating the goodness of fit.
+            float: The R² value indicating the goodness of fit or a large error value if evaluation fails.
         """
-        #func should be a sympy function
-        #if isinstance(func, (str, list)): 
-        func = sympify(func)
+        #func = sympify(func)
 
         # Calculate the mean of the y values
+        y_mean = np.mean(y_data)
+
+        # Create a lambdified function for faster evaluation
+        x_symbs = [symbols(f'x_{i}') for i in range(len(x_data[0]))]
+        exec_func = lambdify(x_symbs, func, modules="numpy")
+
+        # Transpose x_data to match the expected input format for lambdify
+        x_data_transposed = list(map(list, zip(*x_data)))
+        x_data = np.array(x_data)
+        t=([x_data[:, i] for i in range(x_data.shape[1])])
         
-        y_mean = sum(y_data) / len(y_data)
+        with warnings.catch_warnings():
+            warnings. simplefilter('ignore')
+            y_pred = exec_func(*[x_data[:, i] for i in range(x_data.shape[1])])
+            if isinstance(y_pred, numbers.Number):
+                y_pred = y_pred * np.ones(len(x_data))
+            if not np.all(np.isfinite(y_pred)): 
+                return float('-inf')
+         
 
-        # Initialize the sum of squares of residuals (SSR) and total sum of squares (SST)
-        sum_func = 0  # Sum of squares of residuals
-        sum_mean = 0  # Total sum of squares
-
-        for x_values, y in zip(x_data, y_data):
-            y_pred = Fitness.evaluate_function(func, x_values)  # Predicted y value by the function
-            sum_func += (y - y_pred) ** 2  # Sum of squares of residuals
-            sum_mean += (y - y_mean) ** 2  # Total sum of squares
+        # Calculate the sum of squares of residuals (SSR) and total sum of squares (SST)
+        sum_func = np.sum((np.array(y_data) - np.array(y_pred)) ** 2)
+        sum_mean = np.sum((np.array(y_data) - y_mean) ** 2)
 
         # Calculate the R² error
-        r2 = 1 - (sum_func / sum_mean)
-        
+        r2 = 1 - (sum_func / sum_mean) if sum_mean != 0 else float('-inf')
         return r2
+
 
 
 class Data():

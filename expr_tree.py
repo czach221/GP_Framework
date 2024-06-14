@@ -333,7 +333,7 @@ class Validator():
         for i, op in enumerate(preorder[1:]):
             # stack shoulndt be empty if there is still a op left
             if not stack:
-                return True
+                return False
 
             # op is an operation -> adding the amount of availiable children knots from the operation
             if op in NODE_OPS:

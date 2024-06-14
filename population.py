@@ -76,7 +76,7 @@ class Organism():
         
         Returns fitness of organism
         """
-        self.fitness_org = fitness.Fitness.calculate_r2(data_x, data_y, self._get_symbolic_expression())
+        self.fitness_org = fitness.Fitness.calculate_r2(data_x, data_y, self.get_symbolic_expression())
         return self.fitness_org
 
     def get_symbolic_expression(self):
