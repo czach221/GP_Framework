@@ -55,7 +55,7 @@ class GP_main():
        
 
         
-        data_x, data_y = fitness.Data().generate_data_points(generated_function, start=0, end=100, step=0.5)
+        data_x, data_y = fitness.Data().generate_data_points(generated_function, start=1, end=100, step=0.5)
         #print(data_x, data_y)
         
         org_1 = population.Organism(preorder_list)
@@ -74,6 +74,8 @@ class GP_main():
         
         
     def test(self, data_x, data_y):
+
+        """
         i = 0
         for preord, description in self.tests: 
             organism = population.Organism(preord)
@@ -85,8 +87,19 @@ class GP_main():
             print(str(organism.get_preorder()), str(i) +"\n")
             i += 1
         print("population lenght: "+str(len(self.tests)))
+        """
 
+        #population = population.Population.generate_random_preorder(1000, 5, 1, [['operations', 1], ['variables', 3], ['constants', 1]], True)
+        popul= []
+        for preorder,_ in self.tests:
+            popul.append(population.Organism(preorder))
+        pop_fit=fitness.Fitness.populations_fitness(popul, data_x, data_y)
+        new_popul= genetic.Genetic.crossover_population(pop_fit, 10, len(data_x[0]), 5, True)
 
+        for child in new_popul:
+            print(child.get_preorder())
+            
+            if child: print(child.get_fitness(data_x, data_y))
                     
 
 

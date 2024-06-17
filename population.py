@@ -6,6 +6,56 @@ import random
 
 class Population():
     
+    def generate_random_valid_preorder_population(population_size : int, length : int, num_variables : int, character_list : list):
+        '''
+        generate an x amount of valid organisms, with a random function in preorder.
+
+        Params:
+            population_size... size of population
+            lenght... amount of characters in function
+            num_variables... 
+        '''
+        population = []
+        
+        operations = ['+','*' ,'exp', 'sin', 'cos', 'tan', 'log', 'inv', 'neg', '*', '+']
+        #operations = ['+','+','*','*', '+']
+
+
+        # allows different dimensions for variables so x_0, x_1, x_2,... instead of x, a, b, ...
+        variables = [f'x_{i}' for i in range(num_variables)]
+        
+        # this list contains all the different characters allowed to use, with diff occurences 
+        character_list_updated = []
+        for character, occurences in character_list:
+            for _ in range(occurences):
+                character_list_updated.append(character)
+                
+
+        while len(population) < population_size:
+            preorder = []
+            for _ in range(length):
+                # choosing the character to add from list
+                character = random.choice(character_list_updated)
+
+                if character == 'operations':
+                    preorder.append(random.choice(operations))
+                elif(character == 'variables'):
+                    preorder.append(random.choice(variables))
+                elif(character == 'constants'):
+                    preorder.append(random.randint(1,9))
+                else:
+                    return 'character not compatible'
+                
+            # createds new organism with the preorder 
+            organism = Organism(preorder)
+
+            # in case only the valid preorders are searched for 
+            
+            if organism.is_valid:
+                population.append(organism)
+            
+        return population
+
     def generate_random_preorder(population_size : int, length : int, num_variables : int, character_list : list, only_valid : bool= None):
         '''
         generate an x amount of organisms, with a random function in preorder.
@@ -17,7 +67,7 @@ class Population():
         '''
         population = []
         
-        operations = ['+','+','*' ,'exp', 'sin', 'cos', 'tan', 'log', 'inv', 'neg', '*', '+']
+        operations = ['+','*' ,'exp', 'sin', 'cos', 'tan', 'log', 'inv', 'neg', '*', '+']
         #operations = ['+','+','*','*', '+']
 
 
@@ -65,7 +115,8 @@ class Organism():
         self.fitness_org = None
         self.root = None
         self.is_valid = expr_tree.Validator.is_valid_preorder(preorder_list)
-
+        self.length = len(preorder_list)
+        
     def get_fitness(self, data_x, data_y):
         """s
         Calculate the fitness of the organism based on the given data and target values.
@@ -110,4 +161,4 @@ class Organism():
         """
         return " ".join(map(str, self.preorder_list))
 
-
+    

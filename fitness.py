@@ -37,7 +37,7 @@ class Fitness():
             if isinstance(y_pred, numbers.Number):
                 y_pred = y_pred * np.ones(len(x_data))
             if not np.all(np.isfinite(y_pred)): 
-                return float('-inf')
+                return float(-1e7)
          
 
         # Calculate the sum of squares of residuals (SSR) and total sum of squares (SST)
@@ -47,6 +47,46 @@ class Fitness():
         # Calculate the R² error
         r2 = 1 - (sum_func / sum_mean) if sum_mean != 0 else float('-inf')
         return r2
+
+    @staticmethod
+    def populations_fitness(population, x_data, y_data):
+        '''
+        returns an array with all the organisms of the population and their fitness
+        '''
+        # initialize return dict
+        population_fitness = {}
+
+        for organism in population:
+            fitness = organism.get_fitness(x_data, y_data)
+            population_fitness[organism] = fitness
+
+        return population_fitness
+
+    @staticmethod
+    def population_weights(populations_fitness : dict) -> dict:
+        """
+        Calculates the weight of each organism based on its fitness.
+
+        Args:
+            organisms_with_fitness (list): A nested list where each element is a list containing an organism and its R² fitness value.
+
+        Returns:
+            dict: A dictionary where keys are organisms and values are their weights.
+        """
+         
+        fitnesses = list(populations_fitness.values())
+    
+        # calculate v = exp(1 - r2)
+        v = np.exp(np.array(fitnesses) - 1)
+        
+        # calculate the sum of all v values
+        s = np.sum(v)
+        
+        # calculate the weights as v / s
+        weights = v / s
+        
+        return weights
+
 
 
 
