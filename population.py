@@ -4,9 +4,9 @@ import random
 
 
 
-class Population():
+class Population_Generator():
     
-    def generate_random_valid_preorder_population(population_size : int, length : int, num_variables : int, character_list : list):
+    def generate_random_valid_preorder_population(population_size : int, length : int, dimension : int, character_list : list):
         '''
         generate an x amount of valid organisms, with a random function in preorder.
 
@@ -22,7 +22,7 @@ class Population():
 
 
         # allows different dimensions for variables so x_0, x_1, x_2,... instead of x, a, b, ...
-        variables = [f'x_{i}' for i in range(num_variables)]
+        variables = [f'x_{i}' for i in range(dimension)]
         
         # this list contains all the different characters allowed to use, with diff occurences 
         character_list_updated = []
@@ -118,7 +118,7 @@ class Organism():
         self.length = len(preorder_list)
         
     def get_fitness(self, data_x, data_y):
-        """s
+        """
         Calculate the fitness of the organism based on the given data and target values.
         
         Params:
@@ -128,6 +128,7 @@ class Organism():
         Returns fitness of organism
         """
         self.fitness_org = fitness.Fitness.calculate_r2(data_x, data_y, self.get_symbolic_expression())
+        if not isinstance(self.fitness_org, (int, float)) or self.fitness_org == float('-inf'): self.fitness_org = -1e7
         return self.fitness_org
 
     def get_symbolic_expression(self):

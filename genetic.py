@@ -25,7 +25,7 @@ class Genetic():
         for parent in parents:
             if parent.length < max_length:
                 # using generate_random_preorder to generate a short preorder in the length of the difference between max_length aiind the length of the preorder
-                fill_up_char = population.Population.generate_random_preorder(1, max_length-parent.length, dimension, [['operations', 2], ['variables', 3], ['constants', 1]])
+                fill_up_char = population.Population_Generator.generate_random_preorder(1, max_length-parent.length, dimension, [['operations', 2], ['variables', 3], ['constants', 1]])
                 
                 # adding the filler preorder to the original preorder
                 parent_preorder.append(parent.get_preorder() + fill_up_char[0].get_preorder())
@@ -44,7 +44,7 @@ class Genetic():
             return organism
 
     @staticmethod
-    def crossover_population(population_fitness, num_crossover, dimension, max_length, allow_duplicates=True, only_valid=False):
+    def crossover_population(population, fitnesses, num_crossover, dimension, max_length, allow_duplicates=True, only_valid=False):
         """
         Selects pairs of organisms for crossover based on their weights.
 
@@ -59,9 +59,7 @@ class Genetic():
             list: A list of tuples, each containing two organisms selected for crossover.
         """
         # get the list of the organism weights
-        weights = fitness.Fitness.population_weights(population_fitness)
-
-        population = list(population_fitness.keys())
+        weights = fitness.Fitness.population_weights(fitnesses)
 
         crossover_population = []
 
@@ -76,7 +74,8 @@ class Genetic():
 
             # create crossover between the two parents
             child = Genetic.crossover(parents, max_length, dimension, only_valid)
-            crossover_population.append(child)
+            if child:
+                crossover_population.append(child)
 
         return crossover_population
 

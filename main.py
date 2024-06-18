@@ -1,9 +1,10 @@
 import numpy as np
 import fitness
 import genetic
-import population
+import population as pop
 import expr_tree
 import sympy as sp
+import regressor
 
 class GP_main(): 
 
@@ -38,6 +39,7 @@ class GP_main():
 
     def main(self):
 
+
         # Example usage
         preorder_list = ['+','*','x_0','x_0','*', 3, 'x_0']
         
@@ -55,10 +57,10 @@ class GP_main():
        
 
         
-        data_x, data_y = fitness.Data().generate_data_points(generated_function, start=1, end=100, step=0.5)
+        data_x, data_y = fitness.Data().generate_data_points(generated_function, start=-100, end=100, step=0.5)
         #print(data_x, data_y)
         
-        org_1 = population.Organism(preorder_list)
+        org_1 = pop.Organism(preorder_list)
         tmp_2 = org_1.get_preorder()
         root = org_1.get_organism_root()
         symp = org_1.get_symbolic_expression()
@@ -66,8 +68,13 @@ class GP_main():
 
         preorder_liste = [['+', '*', '*', 'x_0', 'x_0', 4, 7]]  
         
+        population = regressor.Regressor(data_x, data_y, 100, 6).regressor()
+        sorted_population = fitness.Fitness.sort_population_by_fitness(population, data_x, data_y)
+        for i in range(10):
+            organism = sorted_population[i]
+            print(organism.get_preorder(), organism.get_symbolic_expression(), '\n', 'fitness: ', organism.get_fitness())
 
-        self.test(data_x, data_y)
+        #     self.test(data_x, data_y)
 
 
         #self.ppl = population.Population.generate_random_preorder(100, 5, 1, [['operations', 1], ['variables', 3], ['constants', 1]], True)
@@ -92,7 +99,7 @@ class GP_main():
         #population = population.Population.generate_random_preorder(1000, 5, 1, [['operations', 1], ['variables', 3], ['constants', 1]], True)
         popul= []
         for preorder,_ in self.tests:
-            popul.append(population.Organism(preorder))
+            popul.append(pop.Organism(preorder))
         pop_fit=fitness.Fitness.populations_fitness(popul, data_x, data_y)
         new_popul= genetic.Genetic.crossover_population(pop_fit, 10, len(data_x[0]), 5, True)
 
