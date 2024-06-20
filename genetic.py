@@ -44,7 +44,7 @@ class Genetic():
             return organism
 
     @staticmethod
-    def crossover_population(population, fitnesses, num_crossover, dimension, max_length, allow_duplicates=True, only_valid=False):
+    def crossover_population(popul : population.Population, num_crossover, dimension, max_length, allow_duplicates=True, only_valid=False):
         """
         Selects pairs of organisms for crossover based on their weights.
 
@@ -59,25 +59,21 @@ class Genetic():
             list: A list of tuples, each containing two organisms selected for crossover.
         """
         # get the list of the organism weights
-        weights = fitness.Fitness.population_weights(fitnesses)
+        weights = popul.population_weights()
 
         crossover_population = []
 
-        for _ in range(num_crossover):
+        for i in range(num_crossover):
             if allow_duplicates:
                 # select two organismss randomly. duplicates allowed
-                parents = np.random.choice(population, size=2, p=weights)
+                parents = np.random.choice(popul.population_list, size=2, p=weights)
 
             else: 
                 # select two different organism. replace=False removes the previous pick from the list
-                parents = np.random.choice(population, size=2, replace=False, p=weights)
+                parents = np.random.choice(popul.population_list, size=2, replace=False, p=weights)
 
             # create crossover between the two parents
             child = Genetic.crossover(parents, max_length, dimension, only_valid)
-            if child:
-                crossover_population.append(child)
+            if child: crossover_population.append(child)
 
         return crossover_population
-
-   
-   

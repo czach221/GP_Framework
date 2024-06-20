@@ -39,64 +39,28 @@ class GP_main():
 
     def main(self):
 
-
-        # Example usage
-        preorder_list = ['+','*','x_0','x_0','*', 3, 'x_0']
-        
-        expr_tree_ = expr_tree.ExprTree(preorder_list)
-        tmp = expr_tree_.evaluate_symb()
-        
-        
-        
-
+        # reference function
         x_0 = sp.symbols('x_0')
         cos = sp.cos
-        symbolic_function = 2*cos(x_0)**3
+        symbolic_function = 2*cos(x_0)+x_0  # -> +, 4, *, 2, cos, x_0
         generated_function = sp.lambdify(x_0, symbolic_function, 'numpy')
-
-       
-
         
-        data_x, data_y = fitness.Data().generate_data_points(generated_function, start=-100, end=100, step=0.5)
-        #print(data_x, data_y)
+        # creating datapoints
+        data_x, data_y = fitness.Data().generate_data_points(generated_function, start=-10, end=10, step=1)
         
-        org_1 = pop.Organism(preorder_list)
-        tmp_2 = org_1.get_preorder()
-        root = org_1.get_organism_root()
-        symp = org_1.get_symbolic_expression()
-
-
-        preorder_liste = [['+', '*', '*', 'x_0', 'x_0', 4, 7]]  
-        
-        population = regressor.Regressor(data_x, data_y, 100, 6).regressor()
-        sorted_population = fitness.Fitness.sort_population_by_fitness(population, data_x, data_y)
+        # running the regressor
+        population = regressor.Regressor(data_x, data_y, 100, 10).regressor()
+        # sorting population by fitness
+        sorted_population = population.sort_population_by_fitness()
+        # evaluating the best organisms
         for i in range(10):
             organism = sorted_population[i]
-            print(organism.get_preorder(), organism.get_symbolic_expression(), '\n', 'fitness: ', organism.get_fitness())
+            print(organism.get_preorder(), organism.get_symbolic_expression(), '\n', 'fitness: ', organism.get_fitness(data_x, data_y))
 
-        #     self.test(data_x, data_y)
-
-
-        #self.ppl = population.Population.generate_random_preorder(100, 5, 1, [['operations', 1], ['variables', 3], ['constants', 1]], True)
         
         
     def test(self, data_x, data_y):
 
-        """
-        i = 0
-        for preord, description in self.tests: 
-            organism = population.Organism(preord)
-            root_org = expr_tree.ExprTree(organism.get_preorder())
-            func_org = root_org.evaluate_symb()
-            print('fitness: '+str(organism.get_fitness(data_x, data_y)), '\n', func_org, description)
-            #print(str(root_org.evaluate_symb()), str(i) +"\n")
-
-            print(str(organism.get_preorder()), str(i) +"\n")
-            i += 1
-        print("population lenght: "+str(len(self.tests)))
-        """
-
-        #population = population.Population.generate_random_preorder(1000, 5, 1, [['operations', 1], ['variables', 3], ['constants', 1]], True)
         popul= []
         for preorder,_ in self.tests:
             popul.append(pop.Organism(preorder))

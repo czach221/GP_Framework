@@ -48,68 +48,6 @@ class Fitness():
         r2 = 1 - (sum_func / sum_mean) if sum_mean != 0 else float('inf')
         return r2
 
-    @staticmethod
-    def get_populations_fitness(population, x_data, y_data):
-        '''
-        returns an array with all the organisms of the population and their fitness
-        '''
-        # initialize return dict
-        population_fitness = []
-
-        for organism in population:
-            fitness = organism.get_fitness(x_data, y_data)
-            population_fitness.append(fitness)
-
-        return population_fitness
-
-    def sort_population_by_fitness(population, x_data, y_data):
-        """
-        Sorts the list of organisms based on the corresponding fitness values.
-
-        Args:
-            population (list): List of organisms.
-        Returns:
-            list: Sorted list of organisms based on fitness values.
-        """
-
-        # get the fitness from every organism 
-        fitnesses = Fitness.get_populations_fitness(population, x_data, y_data)
-
-        # Combine organisms and fitnesses into a list of tuples
-        combined = list(zip(population, fitnesses))
-        
-        # Sort the combined list by the fitness values (second element of the tuple)
-        combined.sort(key=lambda x: x[1])
-        
-        # Extract and return the sorted list of organisms
-        sorted_organisms = [item[0] for item in combined]
-        return sorted_organisms
-    
-    @staticmethod
-    def population_weights(fitnesses) -> np.array:
-        """
-        Calculates the weight of each organism based on its fitness.
-
-        Args:
-            organisms_with_fitness (list): A nested list where each element is a list containing an organism and its R² fitness value.
-
-        Returns:
-            dict: A dictionary where keys are organisms and values are their weights.
-        """
-    
-        # calculate v = exp(1 - r2)
-        v = np.exp(np.array(fitnesses) - 1)
-        
-        # calculate the sum of all v values
-        s = np.sum(v)
-        
-        # calculate the weights as v / s
-        weights = v / s
-        
-        return weights
-
-
-
 
 class Data():
     @staticmethod
