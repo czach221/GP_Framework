@@ -1,7 +1,5 @@
-import sympy
 import random
 from expr_tree import Validator
-import fitness
 import population
 import numpy as np
 
@@ -44,7 +42,7 @@ class Genetic():
             return organism
 
     @staticmethod
-    def crossover_population(popul : population.Population, num_crossover, dimension, max_length, allow_duplicates=True, only_valid=False):
+    def crossover_population(popul : population.Population, num_crossover, dimension, max_length, alpha = 1, allow_duplicates=True, only_valid=False):
         """
         Selects pairs of organisms for crossover based on their weights.
 
@@ -59,7 +57,7 @@ class Genetic():
             list: A list of tuples, each containing two organisms selected for crossover.
         """
         # get the list of the organism weights
-        weights = popul.population_weights()
+        weights = popul.population_weights(alpha)
 
         crossover_population = []
 

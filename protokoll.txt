@@ -1,0 +1,17 @@
+24.6.24
+- regressor funktioniert soweit, ist nur sehr langsam.
+- der regressor funktioniert nur mit einfachem crossover
+- meist führt dies zu einem unveränderten ergebniss ab der 7 Generation bis zum ende. dies liegt an der geringen variation in den organismen
+-> verbesserung dazu ist, das löschen von duplikaten und das wiederauffüllen von zufälligen preordern damit neue variabilität dazu kommt
+(interessant: lohnt es sich mehr nur korrekte preorder hinzuzufügen oder inkorrekte)
+
+- weiteres Problem ist die fitness. durch das exp() bei der value berechnung entstehen zu viele 0 values weil der wert zu negativ hoch wird.
+-> alpha hinzufügen
+
+- zudem wollen wir auch den besten aller generationen speichern 
+
+Nach verbesserungen:
+- bei populationionsgröße von 200, entsteht pro generation meistens nur eine population von 30 uniquen organismen. 
+-> lösung ist die erhöhung der crossover pro generation
+- weitere beobachtung ist offentsichtlich die verlängerte Lauzeit pro generation, aufgrunf der erzeugung neuer organismen pro generation. (interessant ist es das pro generation die erzeugung neuer organismen, kürzer ist als am anfang des durchlaufes.
+- Am Ende werden meistens nur schlechte Organismen mit schlechter fitness zurückgegeben, aber oft ist der beste organismus sehr nahe an der Lösung.

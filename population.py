@@ -30,8 +30,10 @@ class Population_Generator():
             for _ in range(occurences):
                 character_list_updated.append(character)
                 
-
+        i = 0
         while len(population) < population_size:
+            print(i, len(population))
+            i+=1
             preorder = []
             for _ in range(length):
                 # choosing the character to add from list
@@ -104,6 +106,8 @@ class Population_Generator():
                 if organism.is_valid:
                     population.append(organism)
             else: population.append(organism)
+
+            print(i, len(population))
         return population
     
 
@@ -113,10 +117,14 @@ class Organism():
     
     def __init__(self, preorder_list):
         self.preorder_list = preorder_list
-        self.fitness_org = None
+        self.fitness = None
         self.root = None
         self.is_valid = expr_tree.Validator.is_valid_preorder(preorder_list)
         self.length = len(preorder_list)
+        self.func = None
+        if self.is_valid:
+            self.func = expr_tree.ExprTree(self.preorder_list).expr
+
         
     def get_fitness(self, data_x, data_y):
         """
@@ -128,16 +136,18 @@ class Organism():
         
         Returns fitness of organism
         """
-        self.fitness_org = fitness.Fitness.calculate_r2(data_x, data_y, self.get_symbolic_expression())
-        if not isinstance(self.fitness_org, (int, float)) or self.fitness_org == float('-inf'): self.fitness_org = -1e7
-        return self.fitness_org
+        if self.fitness: return self.fitness
+
+        self.fitness = fitness.Fitness.calculate_r2(data_x, data_y, self.func)
+        if not isinstance(self.fitness, (int, float)) or self.fitness == float('-inf'): self.fitness = -1e7
+        
+        return self.fitness
 
     def get_symbolic_expression(self):
         """
         Returns the symbolic expression of the tree as sympy func
         """
-        tree = expr_tree.ExprTree(self.preorder_list)
-        return tree.evaluate_symb()
+        return self.func
 
     def get_organism_root(self):
         '''
@@ -155,7 +165,8 @@ class Organism():
         '''
         overrides the old preorder with a new one
         '''
-        preorder = self.preorder_list
+        self.preorder_list = preorder
+        self.func = expr_tree.ExprTree(self.preorder_list).evaluate_symb()
 
     def get_pretty_preorder(self) -> str:
         """
@@ -166,9 +177,10 @@ class Organism():
     
 class Population():
 
-    def __init__(self, population_list = [], x_data = None, y_data = None) -> None:
+    def __init__(self, x_data, y_data, population_list = []) -> None:
         self.x_data, self.y_data = x_data, y_data
         self.population_list = population_list
+        self.fitness = self.get_populations_fitness()
         
     def add_organism(self, organism : Organism):
         self.population_list.append(organism)
@@ -188,13 +200,13 @@ class Population():
         population_fitness = []
         
         for organism in self.population_list:
-            fitness = organism.get_fitness(self.x_data, self.y_data)
+            fitness = organism.get_fitness(self.x_data, self.y_data) if not organism.fitness else organism.fitness
             population_fitness.append(fitness)
 
         return population_fitness
     
 
-    def population_weights(self) -> np.array:
+    def population_weights(self, alpha = 1) -> np.array:
         """
         Calculates the weight of each organism based on its fitness.
 
@@ -204,11 +216,8 @@ class Population():
         Returns:
             dict: A dictionary where keys are organisms and values are their weights.
         """
-        fitnesses = self.get_populations_fitness()
-
-    
         # calculate v = exp(1 - r2)
-        v = np.exp(np.array(fitnesses) - 1)
+        v = np.exp((np.array(self.fitness) - 1) * alpha)
         
         # calculate the sum of all v values
         s = np.sum(v)
@@ -228,17 +237,15 @@ class Population():
             list: Sorted list of organisms based on fitness values.
         """
 
-        # get the fitness from every organism 
-        fitnesses = self.get_populations_fitness()
-
         # Combine organisms and fitnesses into a list of tuples
-        combined = list(zip(self.population_list, fitnesses))
+        combined = list(zip(self.population_list, self.fitness))
         
         # Sort the combined list by the fitness values (second element of the tuple)
-        combined.sort(key=lambda x: x[1])
+        sorted_combined = sorted(combined, key=lambda x: x[1])
         
-        # Extract and return the sorted list of organisms
-        sorted_organisms = [item[0] for item in combined]
+        # seperate 
+        sorted_organisms = [item[0] for item in sorted_combined]
+
         return sorted_organisms
     
     def get_length(self)-> int:
@@ -249,3 +256,26 @@ class Population():
     
     def set_population(self, population : list):
         self.population_list = population
+        self.fitness = self.get_populations_fitness()
+
+    def remove_duplicates(self):
+        """
+        Removes duplicate organisms based on their preorder lists.
+
+        Returns:
+            list: List of unique organisms.
+        """
+                
+        unique_preorders = set()
+        unique_population = []
+
+        for organism in self.population_list:
+            # Convert preorder list to a tuple
+            preorder_tuple = tuple(organism.get_preorder())
+            
+            # Add the preorder tuple to the set and check for duplicates
+            if preorder_tuple not in unique_preorders:
+                unique_preorders.add(preorder_tuple)
+                unique_population.append(organism)
+
+        return unique_population

@@ -282,7 +282,7 @@ class ExprTree():
         self.root = nodes[0]
         self.depth = self._get_depth(self.root)
         self.nodes = self._get_nodes_preorder()
-        self.expr = str(self.evaluate_symb())
+        self.expr = self.evaluate_symb()
     
     def _set_children(self, nodes : list, idx : int) -> int:
         '''
