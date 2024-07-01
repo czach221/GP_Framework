@@ -15,3 +15,29 @@ Nach verbesserungen:
 -> lösung ist die erhöhung der crossover pro generation
 - weitere beobachtung ist offentsichtlich die verlängerte Lauzeit pro generation, aufgrunf der erzeugung neuer organismen pro generation. (interessant ist es das pro generation die erzeugung neuer organismen, kürzer ist als am anfang des durchlaufes.
 - Am Ende werden meistens nur schlechte Organismen mit schlechter fitness zurückgegeben, aber oft ist der beste organismus sehr nahe an der Lösung.
+-> entscheidende verbesserung aber, code funktioniert dadurch viel besser
+
+29.6:
+Verbesserungen:
+- Bei crossover erst nach dem validieren neuen Org erstellen, damit man sich den init bei nicht validen orgs spart
+-> hat überraschenderweise keinen bemerkbaren Unterschied erzeugt (vllt entsteht nur selten junk bei den crossover)
+- nicht alle duplikate löschen ssondern nur alle n-ten vllt, sonst geht ein bias verloren
+
+Beobachtungen:
+- Ich lasse nun fallss ein neuer bester organismus gefunden wurde, diesen printen. was auffällt ist das dieser meistens innerhalb der ersten 5 generationen entsteht, und sich danach nicht mehr verändert
+- Die nächsten generationen sind nur mit junk gefüllt, das sieht man auch an der letzten generation, da ist die fitness immer sehr schlimm
+-> mögliche verbesserung beim crossover duplikate zu erlauben (hat gut funktioniert -> führt jedoch zu mehr duplikaten)
+
+Anpassungen: 
+- einen festen wert für die menge an crossover pro gen machen, der sich an der anzahl an unquen org anpasst
+- was passiert wenn es zu viel crossover gibt? 
+
+1.7:
+Neue Anpassungen und Verbesserungen:
+- Evaluate_symb mit lamdify tauschen
+- Die besten org plotten gegen referenz
+- Die beste fintess der org über jede gen plotten
+- Parameter Liste erstellt -> Parameter Datentyp erstellen
+- Fileprinter um daten/ infos aus dem ablauf zu speichern
+- Filereader um Datenpunkte aus Datein zu lesen und in arrays umzuwandeln
+- Die besten n Organismen aus der letzten generation in die nächste mitnehmen

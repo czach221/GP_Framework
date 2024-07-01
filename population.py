@@ -139,7 +139,7 @@ class Organism():
         if self.fitness: return self.fitness
 
         self.fitness = fitness.Fitness.calculate_r2(data_x, data_y, self.func)
-        if not isinstance(self.fitness, (int, float)) or self.fitness == float('-inf'): self.fitness = -1e7
+        if not isinstance(self.fitness, (int, float)) or self.fitness == 'NaN': self.fitness = -1e7
         
         return self.fitness
 
@@ -225,6 +225,9 @@ class Population():
         # calculate the weights as v / s
         weights = v / s
         
+        if not np.all(np.isfinite(weights)) or isinstance(weights, complex): 
+            return float(-1e7)
+
         return weights
 
     def sort_population_by_fitness(self):

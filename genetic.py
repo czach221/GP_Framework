@@ -33,12 +33,12 @@ class Genetic():
         new_preorder = [
             random.choice([parent_preorder[0][i], parent_preorder[1][i]]) for i in range(max_length)
         ]
-        organism = population.Organism(new_preorder)
-
         if only_valid:
-            if organism.is_valid:
+            if Validator.is_valid_preorder(new_preorder):
+                organism = population.Organism(new_preorder)
                 return organism
         else:
+            organism = population.Organism(new_preorder)
             return organism
 
     @staticmethod

@@ -6,6 +6,8 @@ import expr_tree
 import sympy as sp
 import regressor
 from pyinstrument import Profiler
+import data
+import params
 
 class GP_main(): 
 
@@ -38,34 +40,45 @@ class GP_main():
     
 
 
-    def main():
+    def main(self):
 
         # reference function
         x_0 = sp.symbols('x_0')
         cos = sp.cos
-        symbolic_function = 2*cos(x_0)+x_0  # -> +, 4, *, 2, cos, x_0
+        exp = sp.exp
+        symbolic_function = 2*cos(x_0)+exp(x_0)  # -> +, 4, *, 2, cos, x_0
         generated_function = sp.lambdify(x_0, symbolic_function, 'numpy')
 
 
         # creating datapoints
-        data_x, data_y = fitness.Data().generate_data_points(generated_function, start=-10, end=10, step=1)
+ #       data_x, data_y = data.Data().get_datapoints_from_files()
+
+        data_x, data_y = data.Data.generate_data_points(generated_function, -100, 100, 1)
         '''
         Params:
         '''
         param1 = [
             data_x, 
             data_y,
-            20, # number of generations
-            9, # length of each preorder
-            50, # size of the population
+            150, # number of generations
+            8, # length of each preorder
+            300, # size of the population
             [['operations', 1], ['variables', 3], ['constants', 0]], # list of used characters in the preorders
-            140 # number of crossovers per generation
+            600 # number of crossovers per generation
                 ]
+        
+        # create param obj
+        param = params.Params(param1)
 
+        # organism_init: 136.257 sec bei num_gen von 200
+        # insg zeit: 252.508
+        # org_init: 252.508/136.257 = 1.853
+
+        # bei num_gen von 50 : org_init = 79.111/40.415 = 1.957
         
     #################################################################################
         # running the regressor
-        population, best = regressor.Regressor(param1)
+        population, best = regressor.Regressor(param).regressor()
     #################################################################################
 
         # sorting population by fitness
@@ -75,7 +88,7 @@ class GP_main():
             organism = sorted_population[i]
             print(organism.get_preorder(), organism.get_symbolic_expression(), '\n', 'fitness: ', organism.get_fitness(data_x, data_y))
 
-        print('best organism overall: ', best.get_preorder(), best.fitness)
+        print('best organism overall: ', best.get_preorder(), best.func, best.fitness)
         
         
     def test(self, data_x, data_y):

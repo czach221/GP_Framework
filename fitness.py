@@ -22,7 +22,7 @@ class Fitness():
 
         # Calculate the mean of the y values
         y_mean = np.mean(y_data)
-
+        if y_mean == 'inf': return ''#################################### wie kann ich das programm hier abbrechen lassen
         # Create a lambdified function for faster evaluation
         x_symbs = [symbols(f'x_{i}') for i in range(len(x_data[0]))]
         try:
@@ -72,60 +72,3 @@ class Fitness():
         return Fitness.calculate_fitness(x_data, y_data, y_pred)
         '''
 
-class Data():
-    @staticmethod
-    def generate_data_points(func, start, end, step) -> list: ##### -> muss noch angepasst werden, bei unterschiedlichen x_ auch unterschiedliche variablen einzuberechnen
-        """
-        Generates data points by evaluating the given function over a range of x values.
-
-        Args:
-            func (callable): The function to evaluate.
-            start (float): The starting value of x.
-            end (float): The ending value of x.
-            step (float): The step size for x values.
-
-        Returns:
-            list of y values: A list of y data points.
-            list of x values: A 2 dimensional list of x values, allows multiple x values 
-        """
-
-        
-        data_points_y = []
-        data_points_x = []
-        x = start
-
-        while x <= end:
-            y = func(x)
-            data_points_y.append(y)
-            data_points_x.append([x])
-            x += step
-
-        return data_points_x, data_points_y
-    
-    @staticmethod
-    def generate_data_points_sympy(func, start, end, step) -> list:
-        """
-        Generates data points by evaluating the given sympy function over a range of x values.
-
-        Args:
-            func (sympy.Expr): The sympy function to evaluate.
-            start (float): The starting value of x.
-            end (float): The ending value of x.
-            step (float): The step size for x values.
-
-        Returns:
-            list of tuple: A list of (x, y) data points.
-        """
-        data_points_y = []
-        data_points_x = []
-        x = symbols('x')
-
-        current = start
-
-        while current <= end:
-            y = func.subs(x, current)
-            data_points_y.append((current, float(y)))  # Convert sympy Float to Python float
-            data_points_x.append()
-            current += step
-
-        return data_points_x, data_points_y
