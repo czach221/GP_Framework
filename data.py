@@ -1,6 +1,7 @@
 import sympy
 import os
 import random
+import pickle
 
 class Data():
     @staticmethod
@@ -40,6 +41,7 @@ class Data():
         # Fester Dateipfad
         base_path = os.path.expanduser('/home/colin-zach/User/Documents/Uni/BA/Datapoints_for_regression/Feynman_with_units')
         file_path = os.path.join(base_path, file_name)
+
 
         # Prüfen, ob die Datei existiert
         if not os.path.isfile(file_path):

@@ -43,10 +43,11 @@ class Regressor():
 
             # sort organisms and save the best organism
             best_of_current_gen = popul.sort_population_by_fitness()
-            best_current_org = best_of_current_gen[-1]
+            best_current_org = best_of_current_gen[0]
             if best_current_org.fitness > best_org.fitness: 
                 best_org = best_current_org
-                print(best_org.get_preorder())    
+                print('new best')
+            print(best_org.get_preorder(), best_org.fitness)    
             print(i)
 
             # quit the loop if the organism with fitness 1 has been found (best fitness)

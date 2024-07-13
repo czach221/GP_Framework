@@ -60,11 +60,11 @@ class GP_main():
         param1 = [
             data_x, 
             data_y,
-            150, # number of generations
-            8, # length of each preorder
-            300, # size of the population
+            10, # number of generations
+            11, # length of each preorder
+            500, # size of the population
             [['operations', 1], ['variables', 3], ['constants', 0]], # list of used characters in the preorders
-            600 # number of crossovers per generation
+            1500 # number of crossovers per generation
                 ]
         
         # create param obj

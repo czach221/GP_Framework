@@ -244,7 +244,7 @@ class Population():
         combined = list(zip(self.population_list, self.fitness))
         
         # Sort the combined list by the fitness values (second element of the tuple)
-        sorted_combined = sorted(combined, key=lambda x: x[1])
+        sorted_combined = sorted(combined, key=lambda x: x[1], reverse=True)
         
         # seperate 
         sorted_organisms = [item[0] for item in sorted_combined]
