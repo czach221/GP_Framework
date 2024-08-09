@@ -34,50 +34,30 @@ class Data():
         return data_points_x, data_points_y
     
     @staticmethod
-    def get_datapoints_from_files(file_name, num_lines, rand_line=False):
-        x_data = []
-        y_data = []
+    def get_datapoints_from_files(file_name, problem_number):
+        """
+        method to get the datapoints in 2 arrays, from datapoint-files
+        input:
+            file_name -> name of file [Feynman, Feynman_bonus, Nguyen, Strogatz]
+            problem_number -> number of problem 
 
-        # Fester Dateipfad
-        base_path = os.path.expanduser('/home/colin-zach/User/Documents/Uni/BA/Datapoints_for_regression/Feynman_with_units')
-        file_path = os.path.join(base_path, file_name)
+        return:
+            x -> array of x-datapoint (multidimensional)
+            y -> array of y-datapoints (results)
+            expr -> the real expression we are looking for
+        """
+        current_dir = os.getcwd()
+       
+        path = f'datasets/{file_name}/tasks.p'
+        #path = os.path.join(current_dir, 'datasets', file_name, 'tasks.p')
+        with open(path, 'rb') as handle:
+            task_dict = pickle.load(handle)
 
+        problem_name = list(task_dict.keys())[problem_number]
+        x, y, expr = task_dict[problem_name]['X'], task_dict[problem_name]['y'][:, 0], task_dict[problem_name]['expr'][0]
 
-        # Prüfen, ob die Datei existiert
-        if not os.path.isfile(file_path):
-            raise FileNotFoundError(f"Die Datei {file_path} wurde nicht gefunden.")
-
-        # Datei öffnen und Zeilen lesen
-        with open(file_path, 'r') as file:
-            lines = file.readlines()
-
-        total_lines = len(lines)
-
-        # Überprüfen, ob genügend Zeilen vorhanden sind
-        if num_lines > total_lines:
-            raise ValueError(f"Die Datei enthält nur {total_lines} Zeilen, aber {num_lines} wurden angefordert.")
-
-        # Zufälligen Startwert wählen, wenn rand_line True ist
-        start_line = 0
-        if rand_line:
-            start_line = random.randint(0, total_lines - num_lines)
-
-        # Verarbeiten der ausgewählten Zeilen
-        for i in range(start_line, start_line + num_lines):
-            line = lines[i]
-            # Split the line into numbers
-            values = list(map(float, line.split()))
-            # The last value is the y_value
-            y_value = values[-1]
-            # The rest are x_values
-            x_values = values[:-1]
-
-            y_data.append(y_value)
-            x_data.append(x_values)
-
-        return x_data, y_data
-
-
+        return x, y, expr
+    get_datapoints_from_files('Feynman', 0)
 
 
     #x, y = get_datapoints_from_files('1.6.2.txt', 10)

@@ -4,9 +4,77 @@ import random
 import population
 import numpy as np
 
+# Node arity
+NODE_ARITIES = {
+    '+' : 2,
+    '*' : 2,
+    'sin' : 1,
+    'cos' : 1,
+    'tan' : 1,
+    'exp' : 1,
+    'log' : 1,
+    'inv' : 1,
+    'neg' : 1,
+}
+
 class Population_Generator():
+    @staticmethod
+    def generate_random_valid_preorder_population(population_size, length, dimension, character_list):
+        population = []
+        operations = ['+', '+', '*', '*', 'exp', 'sin', 'cos', 'tan', 'log', 'inv', 'neg']
+        variables = [f'x_{i}' for i in range(dimension)]
+        character_list_updated = []
+        for character, occurrences in character_list:
+            character_list_updated.extend([character] * occurrences)
+        random.shuffle(character_list_updated)
+        while len(population) < population_size:
+            preorder = []
+            count = 0  # Counter for tracking required children nodes
+
+            # Ensure the first character is an operation
+            first_op = random.choice(operations)
+            preorder.append(first_op)
+            count += NODE_ARITIES[first_op] 
+
+            print(len(population))
+            
+            while len(preorder) < length:
+                remaining_positions = length - len(preorder)
+                character = random.choice(character_list_updated)
+
+                if count == 1 and remaining_positions > 1:
+                    character = 'operations'
+                elif count == remaining_positions: 
+                    character = random.choice(['variables', 'constants'])
+
+                if character == 'operations':
+                    op = random.choice(operations)
+                    arities = expr_tree.NODE_ARITIES[op]
+
+                    if count + arities <= remaining_positions:
+                        preorder.append(op)
+                        count += arities - 1 ###### kann es sein das bei *, + nicht -1 gemacht wwerden soll?
+                    else:
+                        continue
+                elif character == 'variables':
+                    preorder.append(random.choice(variables))
+                    count -= 1
+                elif character == 'constants':
+                    preorder.append(random.randint(1, 9))
+                    count -= 1
+                else:
+                    return 'character not compatible'
+
+                
+
+            if count <= 0 and len(preorder) == length:
+                organism = Organism(preorder)
+                if organism.is_valid:
+                    population.append(organism)
+
+        return population 
     
-    def generate_random_valid_preorder_population(population_size : int, length : int, dimension : int, character_list : list):
+    def generate_random_valid_preorder_population1(population_size : int, length : int, dimension : int, character_list : list):
         '''
         generate an x amount of valid organisms, with a random function in preorder.
 

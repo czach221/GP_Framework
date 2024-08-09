@@ -41,3 +41,9 @@ Neue Anpassungen und Verbesserungen:
 - Fileprinter um daten/ infos aus dem ablauf zu speichern
 - Filereader um Datenpunkte aus Datein zu lesen und in arrays umzuwandeln
 - Die besten n Organismen aus der letzten generation in die nächste mitnehmen
+
+
+1.8:
+Neue Verbesserungen:
+- generate always correct preoder:
+-> neue methode die immer valide preorder generiert, laufzeit unglaublich verbessert.

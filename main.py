@@ -46,25 +46,26 @@ class GP_main():
         x_0 = sp.symbols('x_0')
         cos = sp.cos
         exp = sp.exp
-        symbolic_function = 2*cos(x_0)+exp(x_0)  # -> +, 4, *, 2, cos, x_0
-        generated_function = sp.lambdify(x_0, symbolic_function, 'numpy')
+        expr = (2*cos(x_0))+exp(x_0)  # -> +, 4, *, 2, cos, x_0
+        generated_function = sp.lambdify(x_0, expr, 'numpy')
 
 
         # creating datapoints
  #       data_x, data_y = data.Data().get_datapoints_from_files()
 
-        data_x, data_y = data.Data.generate_data_points(generated_function, -100, 100, 1)
+        data_x, data_y = data.Data.generate_data_points(generated_function, -100, 50, 0.5)
+        #data_x, data_y, expr = data.Data.get_datapoints_from_files('Feynman', 0)
         '''
         Params:
         '''
         param1 = [
             data_x, 
             data_y,
-            10, # number of generations
-            11, # length of each preorder
-            500, # size of the population
-            [['operations', 1], ['variables', 3], ['constants', 0]], # list of used characters in the preorders
-            1500 # number of crossovers per generation
+            6, # number of generations
+            7, # length of each preorder
+            1000, # size of the population
+            [['operations', 4], ['variables', 1], ['constants', 1]], # list of used characters in the preorders
+            500 # number of crossovers per generation
                 ]
         
         # create param obj
@@ -89,7 +90,7 @@ class GP_main():
             print(organism.get_preorder(), organism.get_symbolic_expression(), '\n', 'fitness: ', organism.get_fitness(data_x, data_y))
 
         print('best organism overall: ', best.get_preorder(), best.func, best.fitness)
-        
+        print(f'original Expression: {expr}')
         
     def test(self, data_x, data_y):
 
