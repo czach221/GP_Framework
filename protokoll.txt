@@ -46,4 +46,16 @@ Neue Anpassungen und Verbesserungen:
 1.8:
 Neue Verbesserungen:
 - generate always correct preoder:
--> neue methode die immer valide preorder generiert, laufzeit unglaublich verbessert.
+-> neue methode die immer valide preorder generiert, laufzeit unglaublich verbessern soll.
+- Get_datapoints_from_file: datenpunkte mit pickle ziehen und datenpunkte als 2 arrays zurückgeben
+-> funktioniert sehr gut
+
+-fitness func muss gecheckt werden, funktioniert falsch, gibt bei unterschiedlichen ergebnissen fitness von 1
+
+tests:
+-tests für generate_valid_preorder vorher und nachher
+	-params: 1000, 7, 2, [op 4, var 1, const 1]
+
+	>vorher: 7.766 sek
+	>nachher: 6.068 sek
+   -> keine große veränderung

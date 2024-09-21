@@ -333,7 +333,7 @@ class Validator():
         for i, op in enumerate(preorder[1:]):
             # stack shoulndt be empty if there is still a op left
             if not stack:
-                return False
+                return True
 
             # op is an operation -> adding the amount of availiable children knots from the operation
             if op in NODE_OPS:
@@ -350,7 +350,7 @@ class Validator():
             
         # stack should be empty
         return len(stack) == 0
-    
+         
 
     def is_valid_tree(self, node : Node):
         """

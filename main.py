@@ -53,7 +53,7 @@ class GP_main():
         # creating datapoints
  #       data_x, data_y = data.Data().get_datapoints_from_files()
 
-        data_x, data_y = data.Data.generate_data_points(generated_function, -100, 50, 0.5)
+        data_x, data_y = data.Data.generate_data_points(generated_function, -10, 1, 0.01)
         #data_x, data_y, expr = data.Data.get_datapoints_from_files('Feynman', 0)
         '''
         Params:
@@ -65,7 +65,7 @@ class GP_main():
             7, # length of each preorder
             1000, # size of the population
             [['operations', 4], ['variables', 1], ['constants', 1]], # list of used characters in the preorders
-            500 # number of crossovers per generation
+            1500 # number of crossovers per generation
                 ]
         
         # create param obj
@@ -111,8 +111,11 @@ if __name__ == "__main__":
     prof = Profiler()
     prof.start()
 
-    gp.main()
+    #gp.main()
     
+    pop1 = pop.Population_Generator.generate_random_valid_preorder_population(1000, 10, 2, [['operations', 4], ['variables', 1], ['constants', 1]])
+    pop2 = pop.Population_Generator.generate_random_valid_preorder_population1(1000, 10, 2, [["operations", 4], ["variables", 1], ["constants", 1]])
+
     prof.stop()  
     prof.print()
 
