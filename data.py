@@ -46,7 +46,6 @@ class Data():
             y -> array of y-datapoints (results)
             expr -> the real expression we are looking for
         """
-        current_dir = os.getcwd()
        
         path = f'datasets/{file_name}/tasks.p'
         #path = os.path.join(current_dir, 'datasets', file_name, 'tasks.p')
@@ -57,7 +56,7 @@ class Data():
         x, y, expr = task_dict[problem_name]['X'], task_dict[problem_name]['y'][:, 0], task_dict[problem_name]['expr'][0]
 
         return x, y, expr
-    get_datapoints_from_files('Feynman', 0)
+    #get_datapoints_from_files('Feynman', 0)
 
 
     #x, y = get_datapoints_from_files('1.6.2.txt', 10)

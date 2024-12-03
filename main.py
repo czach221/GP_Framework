@@ -111,11 +111,8 @@ if __name__ == "__main__":
     prof = Profiler()
     prof.start()
 
-    #gp.main()
+    gp.main()
     
-    pop1 = pop.Population_Generator.generate_random_valid_preorder_population(1000, 10, 2, [['operations', 4], ['variables', 1], ['constants', 1]])
-    pop2 = pop.Population_Generator.generate_random_valid_preorder_population1(1000, 10, 2, [["operations", 4], ["variables", 1], ["constants", 1]])
-
     prof.stop()  
     prof.print()
 
