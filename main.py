@@ -110,6 +110,10 @@ if __name__ == "__main__":
     gp = GP_main()  # Instanz der Klasse erstellen
     prof = Profiler()
     prof.start()
+    
+    pop = pop.Population_Generator.generate_random_valid_preorder_population(100, 4, 1)
+    print(pop)
+
 
     gp.main()
     

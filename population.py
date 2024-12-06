@@ -18,66 +18,9 @@ NODE_ARITIES = {
 }
 
 class Population_Generator():
+
     @staticmethod
-    def generate_random_valid_preorder_population_davor(population_size, length, dimension, character_list):
-        population = []
-        unary_list = ['exp', 'sin', 'cos', 'tan', 'log', 'inv', 'neg']
-        operations = ['+', '+', '*', '*', 'exp', 'sin', 'cos', 'tan', 'log', 'inv', 'neg']
-        variables = [f'x_{i}' for i in range(dimension)]
-        character_list_updated = []
-        for character, occurrences in character_list:
-            character_list_updated.extend([character] * occurrences)
-        random.shuffle(character_list_updated)
-        while len(population) < population_size:
-            preorder = []
-            count = 0  # Counter for tracking required children nodes
-
-            # Ensure the first character is an operation
-            first_op = random.choice(operations)
-            preorder.append(first_op)
-            count += NODE_ARITIES[first_op] 
-
-            print(len(population))
-            
-            while len(preorder) < length:
-                remaining_positions = length - len(preorder)
-                character = random.choice(character_list_updated)
-
-                #if count == 1 and remaining_positions > 1:
-                #    character = 'operations'
-                if count == remaining_positions: 
-                    character = random.choice(['variables', 'constants'])
-
-                if character == 'operations':
-                    
-                    if count + 2 > remaining_positions: op = random.choice(unary_list)
-                    else: op = random.choice(operations)
-                    arities = expr_tree.NODE_ARITIES[op]
-
-                    if count + arities <= remaining_positions:
-                        preorder.append(op)
-                        count += arities - 1 
-                    else:
-                        continue
-                elif character == 'variables':
-                    preorder.append(random.choice(variables))
-                    count -= 1
-                elif character == 'constants':
-                    preorder.append(random.randint(1, 9))
-                    count -= 1
-                else:
-                    return 'character not compatible'
-
-                
-
-            if count <= 0 and len(preorder) == length:
-                organism = Organism(preorder)
-                if organism.is_valid:
-                    population.append(organism)
-
-        return population 
-    @staticmethod
-    def generate_random_valid_preorder_population(population_size, length, dimension, character_list):
+    def generate_random_valid_preorder_population(population_size, length, dimension, character_list = [['operations', 4], ['variables', 1], ['constants', 1]]):
         population = []
         unary_list = ['exp', 'sin', 'cos', 'tan', 'log', 'inv', 'neg']
         operations = ['+', '+', '*', '*', 'exp', 'sin', 'cos', 'tan', 'log', 'inv', 'neg']
@@ -95,10 +38,10 @@ class Population_Generator():
             # Start with a valid operation
             first_op = random.choice(operations)
             preorder.append(first_op)
-            count += 1
+            count += expr_tree.NODE_ARITIES[first_op]
 
             while len(preorder) < length:
-                remaining_positions = length - len(preorder)
+                
                 character = random.choice(character_list_updated)
 
                 if character == 'operations':
@@ -120,57 +63,6 @@ class Population_Generator():
                 if organism.is_valid:
                     population.append(organism)
 
-        return population
-    def generate_random_valid_preorder_population1(population_size : int, length : int, dimension : int, character_list : list):
-        '''
-        generate an x amount of valid organisms, with a random function in preorder.
-
-        Params:
-            population_size... size of population
-            lenght... amount of characters in function
-            num_variables... 
-        '''
-        population = []
-        
-        operations = ['+','*' ,'exp', 'sin', 'cos', 'tan', 'log', 'inv', 'neg', '*', '+']
-        #operations = ['+','+','*','*', '+']
-
-
-        # allows different dimensions for variables so x_0, x_1, x_2,... instead of x, a, b, ...
-        variables = [f'x_{i}' for i in range(dimension)]
-        
-        # this list contains all the different characters allowed to use, with diff occurences 
-        character_list_updated = []
-        for character, occurences in character_list:
-            for _ in range(occurences):
-                character_list_updated.append(character)
-                
-        i = 0
-        while len(population) < population_size:
-            print(i, len(population))
-            i+=1
-            preorder = []
-            for _ in range(length):
-                # choosing the character to add from list
-                character = random.choice(character_list_updated)
-
-                if character == 'operations':
-                    preorder.append(random.choice(operations))
-                elif(character == 'variables'):
-                    preorder.append(random.choice(variables))
-                elif(character == 'constants'):
-                    preorder.append(random.randint(1,9))
-                else:
-                    return 'character not compatible'
-                
-            # createds new organism with the preorder 
-            organism = Organism(preorder)
-
-            # in case only the valid preorders are searched for 
-            
-            if organism.is_valid:
-                population.append(organism)
-            
         return population
 
     def generate_random_preorder(population_size : int, length : int, num_variables : int, character_list : list, only_valid : bool= None):
@@ -225,8 +117,6 @@ class Population_Generator():
             print(i, len(population))
         return population
     
-
-
 
 class Organism():
     
